@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Water Demand Prediction Framework for Ohrid, North Macedonia"
+abstract: "A comprehensive research framework for water demand forecasting specifically designed for tourism-dependent heritage cities, incorporating regional climate patterns, cultural factors, and UNESCO World Heritage site tourism dynamics."
+authors:
+  - family-names: "Your Last Name"
+    given-names: "Your First Name"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+    affiliation: "Your University"
+    email: "your.email@domain.com"
+repository-code: "https://github.com/yourusername/water-demand-research-ohrid"
+url: "https://github.com/yourusername/water-demand-research-ohrid"
+license: MIT
+keywords:
+  - "water demand forecasting"
+  - "time series analysis"
+  - "machine learning"
+  - "tourism impact"
+  - "heritage cities"
+  - "Ohrid"
+  - "North Macedonia"
+  - "ensemble methods"
+  - "deep learning"
+  - "infrastructure planning"
+date-released: "2024-01-01"
+version: "1.0.0"
