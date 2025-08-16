@@ -1,0 +1,163 @@
+# Ohrid-Specific Water Demand Research Configuration
+
+location:
+  city: "Ohrid"
+  country: "North Macedonia"
+  coordinates:
+    latitude: 41.1175
+    longitude: 20.8016
+  timezone: "Europe/Skopje"
+  population: 42033  # Approximate city population
+  
+regional_characteristics:
+  tourism:
+    peak_season: [6, 7, 8]  # June, July, August
+    shoulder_season: [5, 9]  # May, September
+    off_season: [1, 2, 3, 4, 10, 11, 12]
+    peak_multiplier: 2.5  # Tourism can increase demand by 2.5x
+    unesco_site: true
+    
+  climate:
+    type: "humid subtropical"
+    avg_temp_summer: 22.5  # Celsius
+    avg_temp_winter: 2.0
+    avg_rainfall_annual: 750  # mm
+    dry_season: [6, 7, 8]
+    wet_season: [11, 12, 1, 2]
+    
+  economy:
+    primary_sectors: ["tourism", "agriculture", "fishing", "services"]
+    seasonal_employment: true
+    university_presence: false  # No major university in Ohrid
+    
+  infrastructure:
+    water_source: "Lake Ohrid"
+    treatment_plants: 2
+    network_age: "mixed"  # Mix of old and new infrastructure
+    leakage_rate: 0.25  # Estimated 25% network losses
+    
+  demographics:
+    households: ~14000
+    avg_household_size: 3.0
+    age_distribution:
+      young: 0.25  # 0-25 years
+      middle: 0.45  # 26-55 years
+      elderly: 0.30  # 55+ years
+
+synthetic_data:
+  base_consumption:
+    residential: 120  # liters per person per day (base)
+    commercial: 50   # additional liters per person for commercial
+    industrial: 20   # additional liters per person for industrial
+    tourism: 200     # liters per tourist per day
+    
+  seasonal_patterns:
+    winter_reduction: 0.8   # 20% less consumption in winter
+    summer_increase: 1.3    # 30% more consumption in summer
+    tourism_peak_factor: 2.0  # Double consumption during peak tourism
+    
+  daily_patterns:
+    morning_peak: [6, 8]    # 6-8 AM
+    evening_peak: [18, 21]  # 6-9 PM
+    night_minimum: [23, 5]  # 11 PM - 5 AM
+    
+  weather_sensitivity:
+    temperature_threshold: 25  # Above 25°C increases consumption
+    temp_elasticity: 0.15     # 15% increase per degree above threshold
+    rain_reduction: 0.1       # 10% reduction during rainy days
+    
+  special_events:
+    ohrid_summer_festival:
+      months: [7, 8]
+      duration_days: 45
+      demand_increase: 1.4
+    
+    new_year_orthodox:
+      date: "01-14"  # January 14th
+      demand_increase: 1.2
+      
+    easter_orthodox:
+      variable_date: true
+      demand_increase: 1.15
+
+feature_engineering:
+  temporal_features:
+    - hour
+    - day_of_week
+    - month
+    - season
+    - is_weekend
+    - is_holiday
+    - is_tourist_season
+    - days_since_holiday
+    - days_until_holiday
+    
+  weather_features:
+    - temperature
+    - humidity
+    - precipitation
+    - wind_speed
+    - pressure
+    - cloud_cover
+    - uv_index
+    
+  lag_features:
+    periods: [1, 2, 7, 14, 30]  # hours for hourly data
+    
+  rolling_features:
+    windows: [24, 168, 720]  # 1 day, 1 week, 1 month (hours)
+    statistics: ["mean", "std", "min", "max"]
+    
+  tourism_features:
+    - tourist_arrivals_estimate
+    - hotel_occupancy_rate
+    - festival_indicator
+    - school_holiday_indicator
+
+modeling:
+  target_variable: "water_demand_m3_per_hour"
+  
+  time_series_models:
+    - "ARIMA"
+    - "SARIMA" 
+    - "ETS"
+    - "Prophet"
+    
+  ml_models:
+    - "RandomForest"
+    - "XGBoost"
+    - "LightGBM"
+    - "CatBoost"
+    
+  deep_learning_models:
+    - "LSTM"
+    - "GRU"
+    - "Transformer"
+    
+  evaluation_metrics:
+    - "MAE"
+    - "RMSE"
+    - "MAPE"
+    - "R2"
+    - "Peak_Accuracy"  # Accuracy during peak demand periods
+    
+  validation_strategy:
+    method: "time_series_split"
+    n_splits: 5
+    test_horizon_hours: [24, 168, 720]  # 1 day, 1 week, 1 month
+
+data_collection:
+  frequency: "hourly"
+  historical_years: 3
+  
+  external_apis:
+    weather:
+      primary: "openweathermap"
+      backup: "weatherapi"
+      
+    tourism:
+      source: "manual_estimation"  # Based on seasonal patterns
+      
+    holidays:
+      source: "holidays_library"
+      country: "North Macedonia"
