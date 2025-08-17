@@ -1,0 +1,9 @@
+entry_point: collect_data
+environment_variables:
+  BUCKET_NAME: water-demand-ohrid-expanded-flame-469305-k1
+  DATASET_ID: water_demand_ohrid
+  PROJECT_ID: expanded-flame-469305-k1
+runtime: python39
+trigger:
+  schedule: 0 * * * *
+  timezone: Europe/Skopje
