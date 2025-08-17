@@ -119,6 +119,9 @@ logs/
 *.json
 !*example*.json
 
+# Local configuration files (with real credentials)
+infrastructure/gcp/cloud_functions/config.yaml
+
 # IDE files
 .vscode/
 .idea/
