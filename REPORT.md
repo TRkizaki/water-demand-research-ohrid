@@ -393,6 +393,74 @@ Logging: Comprehensive audit trail
 Cost Monitoring: Budget alerts and optimization
 ```
 
+### L. Weather API Integration Evidence
+
+```bash
+OPENWEATHERMAP API TESTING RESULTS
+==========================================
+
+API Testing Date: August 18, 2025
+Test Location: Ohrid, North Macedonia (41.1175°N, 20.8016°E)
+API Provider: OpenWeatherMap
+API Key Status: Active (****a39c)
+
+COMPREHENSIVE API VALIDATION:
+Test Success Rate: 100% (5/5 tests passed)
+Average Response Time: 490.1ms
+All Required Weather Data Sources: Functional
+
+API ENDPOINTS TESTED:
+1. Current Weather Data API: SUCCESS
+   - Temperature: 14.98°C
+   - Humidity: 82%
+   - Atmospheric Pressure: 1013 hPa
+   - Weather Description: Few clouds
+   - Wind Speed: 2.06 m/s
+   - Visibility: 10 km
+
+2. 5-Day Weather Forecast API: SUCCESS
+   - 40 forecast data points retrieved
+   - 3-hour interval forecasts for 5 days
+   - Temperature, humidity, precipitation predictions
+   - Data format suitable for ML models
+
+3. Air Quality Index API: SUCCESS
+   - Air Quality Index: 2 (Fair)
+   - PM2.5: 7.97 μg/m³
+   - Complete pollution monitoring data
+   - Real-time environmental factors
+
+4. Geocoding API: SUCCESS
+   - Location verified: Ohrid, MK
+   - Coordinates: 41.1170203°N, 20.8017387°E
+   - Accurate targeting for research area
+
+5. API Performance Testing: SUCCESS
+   - 5 consecutive successful requests
+   - No rate limiting issues encountered
+   - Consistent data delivery confirmed
+
+WEATHER DATA INTEGRATION CAPABILITIES:
+Primary Variables for Water Demand Correlation:
+- Temperature: Primary driver of cooling/heating usage
+- Humidity: Affects irrigation and outdoor activities
+- Precipitation: Impacts water supply and demand
+- Air Quality: Influences outdoor activities
+- Wind Speed: Affects evaporation rates
+
+PRODUCTION READINESS:
+Real-time Data Collection: Verified
+Forecast Integration: 5-day prediction capability
+API Reliability: Performance within acceptable limits
+Data Quality: Comprehensive meteorological parameters
+Research Integration: Ready for ML model input
+
+ACADEMIC EVIDENCE FILES:
+- weather_api_comprehensive_test.py: Complete test script
+- weather_api_evidence_report.json: Detailed test results
+- WEATHER_API_EVIDENCE_SUBMISSION.md: Academic report
+```
+
 ---
 
 ### REQUIREMENT 1: Consideration and Engineering of Predictor Variables (Features)

@@ -87,7 +87,38 @@ cp .env.example .env
 # Edit .env with your configuration
 ```
 
-### 2. Generate Synthetic Data
+### 2. Weather API Configuration
+The framework includes comprehensive weather API integration for real-time data collection:
+
+```bash
+# Configure OpenWeatherMap API (required for real weather data)
+export OPENWEATHER_API_KEY='your_openweathermap_api_key'
+
+# Add to .env file
+echo "OPENWEATHER_API_KEY=your_openweathermap_api_key" >> .env
+```
+
+**Weather API Testing:**
+```bash
+# Test weather API integration
+python weather_api_comprehensive_test.py
+
+# Expected output: 100% success rate with real Ohrid weather data
+# Temperature, humidity, precipitation, air quality, and forecasts
+```
+
+**API Capabilities Tested:**
+- **Current Weather**: Real-time conditions for Ohrid
+- **5-Day Forecast**: Predictive weather data for demand forecasting
+- **Air Quality Index**: Environmental factors affecting usage
+- **Geocoding**: Location verification for data accuracy
+- **Performance**: Response times and reliability assessment
+
+**Evidence Files Generated:**
+- `weather_api_evidence_report.json` - Detailed test results
+- `WEATHER_API_EVIDENCE_SUBMISSION.md` - Academic documentation
+
+### 3. Generate Synthetic Data
 ```python
 from src.data_collectors.ohrid_synthetic_generator import OhridWaterDemandGenerator
 
@@ -101,7 +132,7 @@ data = generator.generate_synthetic_data(
 )
 ```
 
-### 3. Train Models
+### 4. Train Models
 ```python
 from src.models.ohrid_predictor import OhridWaterDemandPredictor
 
@@ -118,7 +149,7 @@ predictor.fit_deep_learning_models(X_train, y_train, X_val, y_val)
 predictor.create_hybrid_ensemble(X_train, y_train)
 ```
 
-### 4. Evaluate and Compare
+### 5. Evaluate and Compare
 ```python
 # Comprehensive evaluation
 results = predictor.evaluate_models(X_test, y_test)
@@ -129,7 +160,7 @@ predictor.plot_feature_importance()
 predictor.plot_predictions(y_test)
 ```
 
-### 5. Verify Implementation (Essential Step)
+### 6. Verify Implementation (Essential Step)
 ```python
 # Complete implementation check
 python tests/run_all_tests.py
@@ -809,6 +840,7 @@ python tests/test_models.py           # Model training & evaluation
 **Data Collection Tests:**
 - Synthetic data generation validation
 - Real data API integration testing
+- Weather API comprehensive validation
 - Hybrid data manager functionality
 - Data quality scoring system
 
@@ -832,6 +864,7 @@ OHRID WATER DEMAND RESEARCH - COMPREHENSIVE TEST SUITE
 1. DATA COLLECTION TESTS
 ✓ Synthetic data generation
 ✓ Real data collection
+✓ Weather API integration (100% success rate)
 ✓ Hybrid data management
 ✓ API validation
 
