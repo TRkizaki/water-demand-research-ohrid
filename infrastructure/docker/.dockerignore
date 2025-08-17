@@ -1,0 +1,113 @@
+# Docker ignore file for Ohrid Water Demand Research
+
+# Git and version control
+.git/
+.gitignore
+.gitattributes
+
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Large data files (use mounted volumes instead)
+data/raw/*.csv
+data/processed/*.csv
+data/external/*.csv
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/external/.gitkeep
+
+# Model files (use mounted volumes)
+models/*.pkl
+models/*.h5
+models/*.joblib
+!models/.gitkeep
+
+# Results and temporary files
+results/
+*.tmp
+*.temp
+
+# Credentials and secrets
+*.json
+!*example*.json
+.env
+.env.local
+.env.*.local
+
+# Docker files themselves
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Documentation
+*.md
+docs/
+
+# Test files
+test_*.py
+*_test.py
+tests/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Large archives
+*.zip
+*.tar.gz
+*.rar
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# Node.js (if any frontend components)
+node_modules/
+npm-debug.log*
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
