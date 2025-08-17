@@ -312,9 +312,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For questions, collaboration opportunities, or access to real data:
 
-- **Research Lead**: [Your Name]
-- **Email**: [your.email@domain.com]
-- **Institution**: [Your Institution]
+- **Research Lead**: TETSUROU KIZAKI
+- **Email**: tetsurou.kizaki@cns.uist.edu.mk
+- **Institution**: University of Information Science and Technology "St. Paul the Apostle", Ohrid
 - **ORCID**: [Your ORCID ID]
 
 ---
