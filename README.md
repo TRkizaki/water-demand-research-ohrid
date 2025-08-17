@@ -114,39 +114,264 @@ The notebook demonstrates:
 - Peak demand assessment
 - Deployment recommendations
 
+## Real Data Collection Setup
+
+### Overview
+
+The framework supports both synthetic and real data collection with intelligent fallback mechanisms. Real data collection integrates multiple APIs for comprehensive water demand prediction.
+
+### API Configuration
+
+#### 1. Weather Data - OpenWeatherMap
+
+**Registration:**
+1. Visit https://openweathermap.org/api
+2. Create free account (60 calls/minute limit)
+3. Navigate to API Keys section
+4. Generate new API key
+
+**Setup:**
+```bash
+# Set environment variable
+export OPENWEATHER_API_KEY='your_api_key_here'
+
+# Add to .env file (not tracked by git)
+echo "OPENWEATHER_API_KEY=your_api_key_here" >> .env
+```
+
+**Usage:**
+```python
+from src.data_collectors.ohrid_real_data_collector import OhridRealDataCollector
+
+collector = OhridRealDataCollector()
+weather = collector.fetch_current_weather()
+print(f"Current temperature: {weather.temperature}°C")
+```
+
+#### 2. Tourism Data Sources
+
+**Current Implementation:**
+- Seasonal estimation algorithms based on historical patterns
+- UNESCO World Heritage site visitor modeling
+- Festival and event calendar integration
+
+**Future API Integrations:**
+```bash
+# Hotel booking APIs (planned)
+export BOOKING_API_KEY='your_booking_key'
+export EXPEDIA_API_KEY='your_expedia_key'
+
+# Municipal tourism office API (when available)
+export OHRID_TOURISM_API_KEY='municipal_api_key'
+```
+
+#### 3. Municipal Water System Integration
+
+**Requirements:**
+- Partnership with JP Vodovod Ohrid (local water utility)
+- SCADA system API access or database connection
+- IoT sensor network integration
+
+**Setup Framework:**
+```python
+# Framework ready for municipal integration
+water_data = collector.fetch_water_system_data()
+# Returns: flow rates, pressure levels, treatment plant status
+```
+
+### Hybrid Data Management
+
+**Automatic Source Selection:**
+```python
+from src.data_collectors.ohrid_data_manager import OhridDataManager
+
+# Initialize with quality threshold
+manager = OhridDataManager(
+    prefer_real_data=True,
+    quality_threshold=50  # Use real data if quality >= 50/100
+)
+
+# Get current data (automatically selects best source)
+current_data = manager.get_current_data()
+print(f"Data source: {current_data['data_source']}")  # 'real' or 'synthetic'
+print(f"Quality score: {current_data['quality_score']}/100")
+```
+
+**Data Quality Scoring:**
+- Weather API availability: 40 points
+- Tourism estimation: 30 points  
+- Water system data: 30 points
+- Total possible: 100 points
+
+### Testing Real Data Collection
+
+**Run diagnostic test:**
+```bash
+python test_real_data_collection.py
+```
+
+**Expected output:**
+```
+Weather Data: ✓ (if API key configured) / ✗ (if missing)
+Tourism Estimation: ✓ (always available)
+Water System: ✗ (requires municipal partnership)
+Overall Quality: 30-70/100 (depending on available APIs)
+Recommendation: Use synthetic data / Ready for real data
+```
+
+### Production Deployment
+
+**Environment Variables:**
+```bash
+# Required for real data collection
+export OPENWEATHER_API_KEY='your_weather_api_key'
+export GOOGLE_CLOUD_PROJECT='your_gcp_project'
+
+# Optional future integrations
+export BOOKING_API_KEY='your_booking_key'
+export MUNICIPAL_WATER_API='water_utility_endpoint'
+```
+
+**Fallback Strategy:**
+1. **Primary**: Real APIs with quality validation
+2. **Secondary**: Synthetic data with realistic parameters
+3. **Hybrid**: Combine real weather + synthetic tourism when needed
+
+### Data Sources Summary
+
+| Data Type | Source | Status | Quality Impact |
+|-----------|--------|--------|----------------|
+| Weather | OpenWeatherMap API | Available | +40 points |
+| Tourism | Estimation Algorithm | Active | +30 points |
+| Water System | Municipal SCADA | Planned | +30 points |
+| Synthetic | Generator | Always Available | 100 points |
+
 ## GCP Deployment
 
-### Cloud Infrastructure
-The framework has been successfully deployed to Google Cloud Platform with the following resources:
+### Cloud Infrastructure Architecture
 
-- **Project ID**: `expanded-flame-469305-k1`
-- **Storage Bucket**: `gs://water-demand-ohrid-expanded-flame-469305-k1`
-- **BigQuery Dataset**: `water_demand_ohrid` (26,257 rows of synthetic data)
-- **Region**: `europe-west3`
+The framework integrates with Google Cloud Platform providing a scalable research infrastructure:
 
-### Deployment
+**Core GCP Services:**
+- **Cloud Storage**: Data lake for raw datasets and model artifacts
+- **BigQuery**: Structured data warehouse with SQL analytics capabilities
+- **Vertex AI**: Machine learning model training and deployment platform
+- **Cloud Functions**: Serverless data collection and processing
+- **Cloud Scheduler**: Automated data pipeline orchestration
+- **Vertex AI Workbench**: Jupyter notebook environment for research
+
+**Data Flow Process:**
+1. **Data Collection** - Real-time APIs and synthetic generation
+2. **Cloud Storage** - Raw data storage and versioning
+3. **BigQuery** - Structured analytics and feature engineering
+4. **Vertex AI** - Model training and hyperparameter tuning
+5. **Model Deployment** - Real-time prediction endpoints
+6. **Monitoring** - Performance tracking and alerting
+
+### GCP Setup Instructions
+
+#### 1. Prerequisites
 ```bash
-# Authenticate with GCP
+# Install Google Cloud SDK
+curl https://sdk.cloud.google.com | bash
+exec -l $SHELL
+
+# Install Python dependencies
+pip install google-cloud-storage google-cloud-bigquery google-cloud-aiplatform
+```
+
+#### 2. Authentication Setup
+```bash
+# Authenticate with Google Cloud
+gcloud auth login
 gcloud auth application-default login
-gcloud config set project expanded-flame-469305-k1
+
+# Set your project ID
+gcloud config set project YOUR_PROJECT_ID
+```
+
+#### 3. Enable Required APIs
+```bash
+# Enable necessary GCP services
+gcloud services enable storage.googleapis.com
+gcloud services enable bigquery.googleapis.com
+gcloud services enable aiplatform.googleapis.com
+gcloud services enable cloudfunctions.googleapis.com
+gcloud services enable cloudscheduler.googleapis.com
+gcloud services enable notebooks.googleapis.com
+```
+
+#### 4. Deploy Research Framework
+```bash
+# Set environment variables
+export GOOGLE_CLOUD_PROJECT='your-project-id'
+export GCP_REGION='europe-west3'
 
 # Deploy framework and data
 python deploy_to_gcp.py
 ```
 
-### Cloud Resources
-- **Cloud Storage**: 7.5 MB of synthetic water demand data and model artifacts
-- **BigQuery**: Structured data warehouse with hourly demand records
-- **Vertex AI**: Ready for model training and deployment
-- **Data Pipeline**: Automated framework for real-time predictions
-
-### Access Your Data
+#### 5. Verify Deployment
 ```bash
-# Query BigQuery data
-bq query 'SELECT * FROM water_demand_ohrid.water_demand_data LIMIT 10'
+# Check cloud storage
+gsutil ls gs://water-demand-ohrid-YOUR_PROJECT_ID/
 
-# Access cloud storage
-# Visit: https://console.cloud.google.com/storage/browser/water-demand-ohrid-expanded-flame-469305-k1
+# Query BigQuery data
+bq query 'SELECT COUNT(*) FROM water_demand_ohrid.water_demand_data'
+
+# List Vertex AI resources
+gcloud ai models list --region=europe-west3
+```
+
+### Cloud Resources Access
+
+**BigQuery Analytics:**
+```sql
+-- Analyze hourly demand patterns
+SELECT 
+    hour,
+    AVG(water_demand_m3_per_hour) as avg_demand,
+    STDDEV(water_demand_m3_per_hour) as demand_variation
+FROM water_demand_ohrid.water_demand_data 
+GROUP BY hour 
+ORDER BY hour;
+
+-- Tourism impact analysis
+SELECT 
+    is_tourist_season,
+    AVG(water_demand_m3_per_hour) as avg_demand,
+    COUNT(*) as records
+FROM water_demand_ohrid.water_demand_data 
+GROUP BY is_tourist_season;
+```
+
+**Vertex AI Model Training:**
+```python
+from google.cloud import aiplatform
+
+# Initialize Vertex AI
+aiplatform.init(project='your-project-id', location='europe-west3')
+
+# Create training job
+job = aiplatform.CustomTrainingJob(
+    display_name='ohrid-water-demand-training',
+    script_path='src/models/ohrid_predictor.py',
+    container_uri='gcr.io/cloud-aiplatform/training/tf-enterprise-2.8-cpu:latest',
+    requirements=['pandas', 'scikit-learn', 'xgboost'],
+    model_serving_container_image_uri='gcr.io/cloud-aiplatform/prediction/tf2-cpu.2-8:latest'
+)
+```
+
+**Cloud Storage Data Management:**
+```bash
+# Upload new datasets
+gsutil cp data/new_dataset.csv gs://water-demand-ohrid-YOUR_PROJECT_ID/data/raw/
+
+# Download trained models
+gsutil cp gs://water-demand-ohrid-YOUR_PROJECT_ID/models/* ./models/
+
+# Sync entire data directory
+gsutil -m rsync -r data/ gs://water-demand-ohrid-YOUR_PROJECT_ID/data/
 ```
 
 ## Key Features
