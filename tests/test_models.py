@@ -4,7 +4,6 @@ Test Suite for Model Components
 Tests model training, evaluation, and prediction functionality.
 """
 
-import pytest
 import pandas as pd
 import numpy as np
 import sys
@@ -14,6 +13,7 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 from models.ohrid_predictor import OhridWaterDemandPredictor
+from models.time_series_analyzer import TimeSeriesAnalyzer
 
 
 class TestOhridPredictor:
@@ -90,34 +90,103 @@ class TestOhridPredictor:
             assert metrics['RMSE'] >= 0
 
 
+class TestTimeSeriesAnalyzer:
+    """Test the comprehensive time series analyzer."""
+    
+    def setup_method(self):
+        """Setup test fixtures."""
+        self.analyzer = TimeSeriesAnalyzer()
+        
+        # Create sample time series data
+        np.random.seed(42)
+        dates = pd.date_range('2023-01-01', periods=200, freq='h')
+        
+        # Generate realistic water demand pattern
+        baseline = 200
+        daily_pattern = 50 * np.sin(2 * np.pi * np.arange(200) / 24)
+        noise = np.random.normal(0, 10, 200)
+        values = baseline + daily_pattern + noise
+        
+        self.sample_series = pd.Series(values, index=dates)
+        
+    def test_stationarity_analysis(self):
+        """Test stationarity analysis functionality."""
+        stationarity_results = self.analyzer.analyze_stationarity(self.sample_series)
+        
+        assert 'adf' in stationarity_results
+        assert 'kpss' in stationarity_results
+        assert 'statistic' in stationarity_results['adf']
+        assert 'pvalue' in stationarity_results['adf']
+        assert 'is_stationary' in stationarity_results['adf']
+    
+    def test_seasonal_decomposition(self):
+        """Test seasonal decomposition functionality."""
+        decomp_results = self.analyzer.seasonal_decomposition(self.sample_series, period=24)
+        
+        assert 'additive' in decomp_results
+        assert 'trend' in decomp_results['additive']
+        assert 'seasonal' in decomp_results['additive']
+        assert 'residual' in decomp_results['additive']
+    
+    def test_arima_order_determination(self):
+        """Test ARIMA order determination."""
+        order_results = self.analyzer.determine_arima_orders(self.sample_series)
+        
+        # Should have at least grid search results
+        assert 'grid_search' in order_results
+        assert 'best_order' in order_results['grid_search']
+        assert 'best_aic' in order_results['grid_search']
+    
+    def test_comprehensive_analysis(self):
+        """Test the comprehensive analysis pipeline."""
+        results = self.analyzer.comprehensive_analysis(self.sample_series, seasonal_period=24)
+        
+        # Check main analysis components
+        assert 'stationarity' in results
+        assert 'decomposition' in results
+        assert 'arima' in results
+        assert 'comparison' in results
+        
+        # Check model comparison results
+        if 'comparison' in results and not results['comparison'].empty:
+            comparison_df = results['comparison']
+            assert 'Model' in comparison_df.columns
+            assert 'AIC' in comparison_df.columns
+            assert 'Forecast MAE' in comparison_df.columns
+
+
 def run_model_tests():
     """Run all model tests."""
-    test_class = TestOhridPredictor
-    
     print("Running Model Tests...")
     
     total_tests = 0
     passed_tests = 0
     
-    # Get test methods
-    test_methods = [method for method in dir(test_class) 
-                   if method.startswith('test_')]
+    # Test both classes
+    test_classes = [TestOhridPredictor, TestTimeSeriesAnalyzer]
     
-    for test_method in test_methods:
-        total_tests += 1
-        try:
-            # Create instance and run test
-            instance = test_class()
-            instance.setup_method()
-            
-            getattr(instance, test_method)()
-            print(f"  ✓ {test_method}")
-            passed_tests += 1
-            
-        except Exception as e:
-            print(f"  ✗ {test_method}: {e}")
+    for test_class in test_classes:
+        print(f"\nTesting {test_class.__name__}...")
+        
+        # Get test methods
+        test_methods = [method for method in dir(test_class) 
+                       if method.startswith('test_')]
+        
+        for test_method in test_methods:
+            total_tests += 1
+            try:
+                # Create instance and run test
+                instance = test_class()
+                instance.setup_method()
+                
+                getattr(instance, test_method)()
+                print(f"  ✓ {test_method}")
+                passed_tests += 1
+                
+            except Exception as e:
+                print(f"  ✗ {test_method}: {e}")
     
-    print(f"Model Tests: {passed_tests}/{total_tests} passed")
+    print(f"\nModel Tests: {passed_tests}/{total_tests} passed")
     return passed_tests == total_tests
 
 
