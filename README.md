@@ -2,6 +2,7 @@
 
 A comprehensive research framework for water demand forecasting specifically designed for Ohrid, incorporating tourism patterns, regional climate, and cultural factors unique to this UNESCO World Heritage city.
 
+Please read first -> [REPORT.md](https://github.com/TRkizaki/water-demand-research-ohrid/blob/main/REPORT.md)
 ## Project Overview
 
 This research framework implements and compares multiple approaches for water demand prediction:
