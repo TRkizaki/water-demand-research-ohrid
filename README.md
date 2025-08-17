@@ -30,11 +30,18 @@ water-demand-research-ohrid/
 │   ├── 01_ohrid_water_demand_demo.ipynb
 │   ├── 02_feature_engineering.ipynb
 │   ├── 03_model_experiments.ipynb
-│   └── 04_evaluation.ipynb
+│   ├── 04_evaluation.ipynb
+│   └── 05_comprehensive_time_series_analysis.ipynb
 ├── src/                     # Core framework components
 │   ├── data_collectors/     # Synthetic + real data collection
+│   │   ├── ohrid_synthetic_generator.py
+│   │   ├── ohrid_real_data_collector.py
+│   │   └── ohrid_data_manager.py
 │   ├── feature_engineering/ # Comprehensive feature creation
+│   │   └── temporal_features.py
 │   ├── models/              # ML/DL model implementations
+│   │   ├── ohrid_predictor.py
+│   │   └── time_series_analyzer.py
 │   └── utils/               # Helper functions and utilities
 ├── tests/                   # Comprehensive testing framework
 │   ├── test_data_collection.py
@@ -42,11 +49,25 @@ water-demand-research-ohrid/
 │   └── run_all_tests.py
 ├── infrastructure/          # Deployment and scaling
 │   ├── docker/              # Multi-stage containerization
-│   ├── gcp/                 # Google Cloud Platform setup
-│   └── terraform/           # Infrastructure as Code
+│   │   ├── Dockerfile
+│   │   └── docker-compose.yml
+│   └── gcp/                 # Google Cloud Platform setup
+│       ├── setup_gcp.py
+│       ├── cloud_functions/
+│       └── terraform/
+├── scripts/                 # Automation and setup scripts
+│   └── setup_gcp_quick.sh
 ├── config/                  # Configuration management
 │   └── ohrid_config.yaml    # Regional parameters
-└── results/                 # Model outputs and analysis
+├── models/                  # Trained model artifacts
+├── logs/                    # Application and training logs
+├── REPORT.md               # Comprehensive research documentation
+├── CITATION.cff            # Citation metadata for research
+├── requirements.txt        # Python dependencies
+├── deploy_to_gcp.py       # Cloud deployment script
+├── results_summary.py     # Performance analysis script
+├── test_*.py              # Additional integration tests
+└── results/               # Model outputs and analysis (generated)
 ```
 
 ## Quick Start
@@ -239,35 +260,89 @@ python -c "import psutil; print(f'Available RAM: {psutil.virtual_memory().availa
 
 ### Complete Notebook Series
 
-**1. Main Demonstration**
+The research workflow is organized into five sequential notebooks that provide comprehensive coverage of the water demand prediction methodology:
+
+**1. Main Demonstration (`01_ohrid_water_demand_demo.ipynb`)**
 ```bash
 jupyter lab notebooks/01_ohrid_water_demand_demo.ipynb
 ```
-End-to-end framework demonstration with synthetic data generation, model training, and evaluation.
+End-to-end framework demonstration including:
+- Synthetic data generation with Ohrid-specific parameters
+- Complete model training pipeline (ARIMA, ML, DL, Ensemble)
+- Performance evaluation and model comparison
+- Visualization of results and feature importance
 
-**2. Feature Engineering**
+**2. Feature Engineering (`02_feature_engineering.ipynb`)**
 ```bash
 jupyter lab notebooks/02_feature_engineering.ipynb
 ```
-Comprehensive feature creation including temporal, weather, tourism, lag, and interaction features.
+Comprehensive feature creation covering:
+- Temporal features (cyclical encoding, holidays, festivals)
+- Weather integration (temperature, humidity, precipitation)
+- Tourism indicators (UNESCO site impact, seasonal patterns)
+- Lag features and rolling statistics
+- Interaction terms between different feature groups
 
-**3. Model Experiments**
+**3. Model Experiments (`03_model_experiments.ipynb`)**
 ```bash
 jupyter lab notebooks/03_model_experiments.ipynb
 ```
-Complete model comparison: ARIMA, Random Forest, XGBoost, LSTM, and hybrid ensembles.
+Systematic model comparison including:
+- Traditional time series: ARIMA, SARIMA, Exponential Smoothing
+- Machine learning: Random Forest, XGBoost, LightGBM
+- Deep learning: LSTM neural networks
+- Hybrid ensemble approaches with optimized weighting
 
-**4. Model Evaluation**
+**4. Model Evaluation (`04_evaluation.ipynb`)**
 ```bash
 jupyter lab notebooks/04_evaluation.ipynb
 ```
-Detailed performance analysis with peak demand validation and tourism impact assessment.
+Detailed performance analysis featuring:
+- Multi-metric evaluation (MAE, RMSE, MAPE, R²)
+- Peak demand period validation
+- Tourism impact assessment
+- Seasonal performance breakdown
+- Error analysis and residual diagnostics
+
+**5. Comprehensive Time Series Analysis (`05_comprehensive_time_series_analysis.ipynb`)**
+```bash
+jupyter lab notebooks/05_comprehensive_time_series_analysis.ipynb
+```
+Advanced time series methodology including:
+- Stationarity testing and decomposition
+- Autocorrelation and partial autocorrelation analysis
+- Advanced SARIMA modeling with seasonal components
+- Forecast validation and confidence intervals
+
+### Execution Workflow
+
+**Sequential Execution (Recommended):**
+```bash
+# Execute all notebooks in order
+for notebook in notebooks/*.ipynb; do
+    jupyter nbconvert --execute "$notebook" --to notebook --inplace
+done
+```
+
+**Individual Execution:**
+```bash
+# Start with the main demo for overview
+jupyter lab notebooks/01_ohrid_water_demand_demo.ipynb
+
+# Then proceed through the detailed analysis
+jupyter lab notebooks/02_feature_engineering.ipynb
+jupyter lab notebooks/03_model_experiments.ipynb
+jupyter lab notebooks/04_evaluation.ipynb
+jupyter lab notebooks/05_comprehensive_time_series_analysis.ipynb
+```
 
 ### Research Workflow Benefits
-- **Reproducible**: Step-by-step methodology documentation
-- **Educational**: Clear explanations for academic use
-- **Comprehensive**: Covers entire ML pipeline from data to deployment
-- **Publication-Ready**: High-quality visualizations and analysis
+- **Reproducible**: Step-by-step methodology with clear documentation
+- **Educational**: Detailed explanations suitable for academic and professional use
+- **Comprehensive**: Complete ML pipeline from data generation to deployment
+- **Modular**: Each notebook can be executed independently or as part of the sequence
+- **Publication-Ready**: High-quality visualizations and statistical analysis
+- **Extensible**: Framework designed for adaptation to other heritage cities
 
 ## Real Data Collection Setup
 
