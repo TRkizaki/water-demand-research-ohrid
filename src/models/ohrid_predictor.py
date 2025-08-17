@@ -19,7 +19,19 @@ from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.exponential_smoothing.ets import ETSModel
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.stattools import adfuller
-from pmdarima import auto_arima
+
+# Handle pmdarima import gracefully 
+PMDARIMA_AVAILABLE = False
+try:
+    import pmdarima
+    PMDARIMA_AVAILABLE = True
+except ImportError:
+    pass
+except Exception:
+    pass
+
+# Import comprehensive time series analyzer
+from models.time_series_analyzer import TimeSeriesAnalyzer
 
 # Machine Learning
 from sklearn.ensemble import RandomForestRegressor
@@ -67,6 +79,9 @@ class OhridWaterDemandPredictor:
         self.scalers = {}
         self.evaluation_results = {}
         self.feature_importance = {}
+        
+        # Initialize comprehensive time series analyzer
+        self.ts_analyzer = TimeSeriesAnalyzer()
         
         # Set random seeds for reproducibility
         np.random.seed(42)
@@ -146,74 +161,53 @@ class OhridWaterDemandPredictor:
         
         return X_train, X_val, X_test, y_train, y_val, y_test, feature_cols
     
+    def fit_comprehensive_time_series_models(self, y_train: pd.Series, seasonal_period: int = 24) -> Dict:
+        """Fit comprehensive academically rigorous time series models."""
+        print("Fitting Comprehensive Time Series Models...")
+        print("=" * 60)
+        
+        # Run comprehensive time series analysis
+        ts_results = self.ts_analyzer.comprehensive_analysis(y_train, seasonal_period)
+        
+        # Extract fitted models from analyzer results
+        ts_models = {}
+        
+        # ARIMA models
+        if 'arima' in ts_results:
+            for model_name, model_result in ts_results['arima'].items():
+                ts_models[f"TS_{model_name}"] = model_result.fitted_model
+                
+        # SARIMA models
+        if 'sarima' in ts_results:
+            for model_name, model_result in ts_results['sarima'].items():
+                ts_models[f"TS_{model_name}"] = model_result.fitted_model
+                
+        # Exponential Smoothing models
+        if 'exponential_smoothing' in ts_results:
+            for model_name, model_result in ts_results['exponential_smoothing'].items():
+                ts_models[f"TS_{model_name}"] = model_result.fitted_model
+        
+        # Store comprehensive analysis results
+        self.ts_analysis_results = ts_results
+        
+        # Update main models dictionary
+        self.models.update(ts_models)
+        
+        print(f"\nTime Series Models Fitted: {len(ts_models)}")
+        print("Comprehensive analysis results available in self.ts_analysis_results")
+        
+        return ts_models
+    
     def fit_arima_models(self, y_train: pd.Series, seasonal: bool = True) -> Dict:
-        """Fit ARIMA and SARIMA models with automatic order selection."""
-        models = {}
-        
-        # Check stationarity
-        adf_result = adfuller(y_train.dropna())
-        is_stationary = adf_result[1] < 0.05
-        
-        print(f"ADF test p-value: {adf_result[1]:.4f}")
-        print(f"Series is {'stationary' if is_stationary else 'non-stationary'}")
-        
-        # Auto ARIMA
-        try:
-            auto_model = auto_arima(
-                y_train,
-                seasonal=seasonal,
-                m=24 if seasonal else 1,  # 24-hour seasonality
-                max_p=3, max_q=3, max_P=2, max_Q=2,
-                stepwise=True,
-                suppress_warnings=True,
-                error_action='ignore'
-            )
-            models['AutoARIMA'] = auto_model
-            print(f"Auto ARIMA order: {auto_model.order}")
-            if seasonal:
-                print(f"Seasonal order: {auto_model.seasonal_order}")
-                
-        except Exception as e:
-            print(f"Auto ARIMA failed: {e}")
-        
-        # Manual SARIMA with known seasonality
-        if seasonal:
-            try:
-                sarima_model = ARIMA(
-                    y_train,
-                    order=(1, 1, 1),
-                    seasonal_order=(1, 1, 1, 24)
-                )
-                sarima_fitted = sarima_model.fit()
-                models['SARIMA'] = sarima_fitted
-                
-            except Exception as e:
-                print(f"SARIMA fitting failed: {e}")
-        
-        self.models.update(models)
-        return models
+        """Legacy method - now uses comprehensive time series analyzer."""
+        print("Using comprehensive time series analysis framework...")
+        return self.fit_comprehensive_time_series_models(y_train)
     
     def fit_exponential_smoothing(self, y_train: pd.Series) -> Dict:
-        """Fit Exponential Smoothing models."""
-        models = {}
-        
-        try:
-            # ETS model with automatic parameter selection
-            ets_model = ETSModel(
-                y_train,
-                error='add',
-                trend='add',
-                seasonal='add',
-                seasonal_periods=24
-            )
-            ets_fitted = ets_model.fit()
-            models['ETS'] = ets_fitted
-            
-        except Exception as e:
-            print(f"ETS fitting failed: {e}")
-        
-        self.models.update(models)
-        return models
+        """Legacy method - now uses comprehensive time series analyzer."""
+        print("Exponential smoothing included in comprehensive time series analysis...")
+        # Return empty dict as models are handled by comprehensive analyzer
+        return {}
     
     def fit_machine_learning_models(self, 
                                    X_train: pd.DataFrame, 
@@ -459,17 +453,17 @@ class OhridWaterDemandPredictor:
         
         model = self.models[model_name]
         
-        if model_name in ['AutoARIMA', 'SARIMA']:
-            # Time series models
-            predictions = model.forecast(steps=min(len(X_test), horizon_hours))
-            if len(predictions) < len(X_test):
-                # Extend predictions if needed (simplified approach)
-                predictions = np.tile(predictions, len(X_test) // len(predictions) + 1)[:len(X_test)]
-            
-        elif model_name == 'ETS':
-            predictions = model.forecast(steps=min(len(X_test), horizon_hours))
-            if len(predictions) < len(X_test):
-                predictions = np.tile(predictions, len(X_test) // len(predictions) + 1)[:len(X_test)]
+        if model_name.startswith('TS_') or model_name in ['AutoARIMA', 'SARIMA', 'ETS']:
+            # Time series models from comprehensive analyzer
+            try:
+                predictions = model.forecast(steps=min(len(X_test), horizon_hours))
+                if len(predictions) < len(X_test):
+                    # Extend predictions if needed (simplified approach)
+                    predictions = np.tile(predictions, len(X_test) // len(predictions) + 1)[:len(X_test)]
+            except Exception as e:
+                print(f"Forecast error for {model_name}: {e}")
+                # Fallback to mean prediction
+                predictions = np.full(len(X_test), X_test.mean().mean())
             
         elif model_name in ['RandomForest', 'XGBoost', 'LightGBM']:
             predictions = model.predict(X_test)
@@ -598,6 +592,47 @@ class OhridWaterDemandPredictor:
         
         return comparison_df
     
+    def get_time_series_analysis_summary(self) -> pd.DataFrame:
+        """Get comprehensive time series analysis summary for academic reporting."""
+        if not hasattr(self, 'ts_analysis_results') or not self.ts_analysis_results:
+            print("No time series analysis results available. Run fit_comprehensive_time_series_models first.")
+            return pd.DataFrame()
+        
+        print("=" * 80)
+        print("COMPREHENSIVE TIME SERIES ANALYSIS SUMMARY")
+        print("=" * 80)
+        
+        # Display stationarity results
+        if 'stationarity' in self.ts_analysis_results:
+            stationarity = self.ts_analysis_results['stationarity']
+            print("\nSTATIONARITY ANALYSIS:")
+            print(f"ADF Test - Statistic: {stationarity['adf']['statistic']:.4f}, p-value: {stationarity['adf']['pvalue']:.4f}")
+            print(f"KPSS Test - Statistic: {stationarity['kpss']['statistic']:.4f}, p-value: {stationarity['kpss']['pvalue']:.4f}")
+            print(f"Series Assessment: {'Stationary' if stationarity['adf']['is_stationary'] and stationarity['kpss']['is_stationary'] else 'Non-stationary'}")
+        
+        # Get model comparison from comprehensive analysis
+        if 'comparison' in self.ts_analysis_results:
+            comparison_df = self.ts_analysis_results['comparison']
+            print("\nTIME SERIES MODEL COMPARISON:")
+            print(comparison_df.head(10))
+            
+            # Academic insights
+            print("\nACADEMIC INSIGHTS:")
+            if not comparison_df.empty:
+                best_model = comparison_df.iloc[0]['Model']
+                best_mae = comparison_df.iloc[0]['Forecast MAE']
+                print(f"• Best performing model: {best_model} (MAE: {best_mae:.4f})")
+                
+                # Model category performance
+                category_performance = comparison_df.groupby('Category')['Forecast MAE'].mean()
+                print("• Average performance by model category:")
+                for category, mae in category_performance.items():
+                    print(f"  - {category}: {mae:.4f} MAE")
+            
+            return comparison_df
+        
+        return pd.DataFrame()
+    
     def plot_feature_importance(self, top_n: int = 15) -> None:
         """Plot feature importance for tree-based models."""
         if not self.feature_importance:
@@ -714,9 +749,8 @@ def main():
     print(f"Features: {len(feature_cols)}")
     
     # Fit models
-    print("\nFitting traditional time series models...")
-    predictor.fit_arima_models(y_train)
-    predictor.fit_exponential_smoothing(y_train)
+    print("\nFitting comprehensive time series models...")
+    predictor.fit_comprehensive_time_series_models(y_train)
     
     print("Fitting machine learning models...")
     predictor.fit_machine_learning_models(X_train, y_train, X_val, y_val)
@@ -733,6 +767,10 @@ def main():
     
     # Compare models
     comparison_df = predictor.compare_models()
+    
+    # Time series analysis summary
+    print("\nGenerating time series analysis summary...")
+    ts_summary = predictor.get_time_series_analysis_summary()
     
     # Feature importance
     print("\nFeature importance analysis...")
