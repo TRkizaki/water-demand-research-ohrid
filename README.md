@@ -21,24 +21,32 @@ This research framework implements and compares multiple approaches for water de
 
 ```
 water-demand-research-ohrid/
-├── data/
-│   ├── raw/              # Original datasets
-│   ├── processed/        # Cleaned data
-│   ├── external/         # Weather, tourism data
-│   └── features/         # Engineered features
-├── notebooks/
-│   └── 01_ohrid_water_demand_demo.ipynb
-├── src/
-│   ├── data_collectors/  # Data generation & collection
-│   ├── feature_engineering/ # Feature creation
-│   ├── models/          # Model implementations
-│   └── utils/           # Helper functions
-├── config/
-│   └── ohrid_config.yaml # Regional configuration
-├── infrastructure/
-│   ├── gcp/             # Google Cloud setup
-│   └── docker/          # Containerization
-└── tests/               # Unit tests
+├── data/                    # Data management with clear lineage
+│   ├── raw/                 # Original datasets (synthetic + real)
+│   ├── processed/           # Cleaned and integrated data
+│   ├── external/            # Weather, tourism, municipal data
+│   └── features/            # Engineered features for ML
+├── notebooks/               # Complete research workflow
+│   ├── 01_ohrid_water_demand_demo.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_model_experiments.ipynb
+│   └── 04_evaluation.ipynb
+├── src/                     # Core framework components
+│   ├── data_collectors/     # Synthetic + real data collection
+│   ├── feature_engineering/ # Comprehensive feature creation
+│   ├── models/              # ML/DL model implementations
+│   └── utils/               # Helper functions and utilities
+├── tests/                   # Comprehensive testing framework
+│   ├── test_data_collection.py
+│   ├── test_models.py
+│   └── run_all_tests.py
+├── infrastructure/          # Deployment and scaling
+│   ├── docker/              # Multi-stage containerization
+│   ├── gcp/                 # Google Cloud Platform setup
+│   └── terraform/           # Infrastructure as Code
+├── config/                  # Configuration management
+│   └── ohrid_config.yaml    # Regional parameters
+└── results/                 # Model outputs and analysis
 ```
 
 ## Quick Start
@@ -99,20 +107,39 @@ predictor.plot_feature_importance()
 predictor.plot_predictions(y_test)
 ```
 
-## Demo Notebook
+## Research Workflow
 
-Run the complete demo:
+### Complete Notebook Series
+
+**1. Main Demonstration**
 ```bash
 jupyter lab notebooks/01_ohrid_water_demand_demo.ipynb
 ```
+End-to-end framework demonstration with synthetic data generation, model training, and evaluation.
 
-The notebook demonstrates:
-- Synthetic data generation with Ohrid characteristics
-- Comprehensive feature engineering
-- Multiple model training and evaluation
-- Tourism impact analysis
-- Peak demand assessment
-- Deployment recommendations
+**2. Feature Engineering**
+```bash
+jupyter lab notebooks/02_feature_engineering.ipynb
+```
+Comprehensive feature creation including temporal, weather, tourism, lag, and interaction features.
+
+**3. Model Experiments**
+```bash
+jupyter lab notebooks/03_model_experiments.ipynb
+```
+Complete model comparison: ARIMA, Random Forest, XGBoost, LSTM, and hybrid ensembles.
+
+**4. Model Evaluation**
+```bash
+jupyter lab notebooks/04_evaluation.ipynb
+```
+Detailed performance analysis with peak demand validation and tourism impact assessment.
+
+### Research Workflow Benefits
+- **Reproducible**: Step-by-step methodology documentation
+- **Educational**: Clear explanations for academic use
+- **Comprehensive**: Covers entire ML pipeline from data to deployment
+- **Publication-Ready**: High-quality visualizations and analysis
 
 ## Real Data Collection Setup
 
@@ -501,6 +528,133 @@ Ensemble          2.35   3.02   4.5%   0.91    3.12
 - European Conference on Machine Learning (ECML-PKDD)
 - Water Distribution Systems Analysis (WDSA) Conference
 
+## Testing Framework
+
+### Comprehensive Test Suite
+
+The framework includes extensive testing for all components:
+
+```bash
+# Run all tests
+python tests/run_all_tests.py
+
+# Individual test suites
+python tests/test_data_collection.py  # Data generation & APIs
+python tests/test_models.py           # Model training & evaluation
+```
+
+### Test Coverage
+
+**Data Collection Tests:**
+- Synthetic data generation validation
+- Real data API integration testing
+- Hybrid data manager functionality
+- Data quality scoring system
+
+**Model Tests:**
+- Training pipeline validation
+- Prediction accuracy verification
+- Performance metric calculation
+- Feature importance analysis
+
+**Integration Tests:**
+- End-to-end workflow validation
+- Component compatibility testing
+- GCP integration verification
+- API endpoint functionality
+
+### Test Results Example
+```
+OHRID WATER DEMAND RESEARCH - COMPREHENSIVE TEST SUITE
+========================================================
+
+1. DATA COLLECTION TESTS
+✓ Synthetic data generation
+✓ Real data collection
+✓ Hybrid data management
+✓ API validation
+
+2. MODEL TESTS  
+✓ Model training
+✓ Evaluation metrics
+✓ Prediction accuracy
+
+Overall Result: 3/3 test suites passed
+🎉 ALL TESTS PASSED - Framework ready for deployment!
+```
+
+## Docker Deployment
+
+### Multi-Stage Docker Architecture
+
+The framework provides production-ready containerization with multiple deployment targets:
+
+**Development Environment:**
+```bash
+# Launch Jupyter Lab environment
+docker-compose up development
+# Access: http://localhost:8888
+```
+
+**Production API:**
+```bash
+# Deploy prediction API
+docker-compose up api
+# Access: http://localhost:8000
+```
+
+**ML Training Environment:**
+```bash
+# Start training with MLflow tracking
+docker-compose up training
+# MLflow UI: http://localhost:5000
+# TensorBoard: http://localhost:6006
+```
+
+**Complete Infrastructure:**
+```bash
+# Full stack: API + Database + Monitoring
+docker-compose up
+# Grafana: http://localhost:3000
+# Prometheus: http://localhost:9090
+```
+
+### Docker Services
+
+**Core Services:**
+- **API Server**: FastAPI-based prediction endpoint
+- **Development**: Jupyter Lab with full research environment
+- **Training**: ML pipeline with experiment tracking
+
+**Infrastructure Services:**
+- **PostgreSQL**: Metadata and results storage
+- **Redis**: Caching and session management
+- **Nginx**: Reverse proxy with SSL termination
+
+**Monitoring Stack:**
+- **Grafana**: Visualization and dashboards
+- **Prometheus**: Metrics collection and alerting
+
+### Production Deployment
+
+**Environment Configuration:**
+```bash
+# Set required environment variables
+export GOOGLE_CLOUD_PROJECT='your-project-id'
+export OPENWEATHER_API_KEY='your-api-key'
+export POSTGRES_PASSWORD='secure-password'
+export GRAFANA_PASSWORD='admin-password'
+
+# Deploy to production
+docker-compose -f docker-compose.yml up -d
+```
+
+**Health Monitoring:**
+- Automatic health checks for all services
+- Prometheus metrics collection
+- Grafana dashboards for system monitoring
+- Auto-restart on failure
+
 ## Contributing
 
 1. Fork the repository
@@ -510,6 +664,8 @@ Ensemble          2.35   3.02   4.5%   0.91    3.12
 5. Submit a pull request
 
 ### Development Setup
+
+**Local Development:**
 ```bash
 # Install development dependencies
 pip install -r requirements.txt
@@ -519,7 +675,19 @@ pip install pre-commit pytest black flake8
 pre-commit install
 
 # Run tests
-pytest tests/
+python tests/run_all_tests.py
+```
+
+**Docker Development:**
+```bash
+# Start development environment
+docker-compose up development
+
+# Run tests in container
+docker-compose run development python tests/run_all_tests.py
+
+# Access Jupyter Lab
+# http://localhost:8888
 ```
 
 ## License
