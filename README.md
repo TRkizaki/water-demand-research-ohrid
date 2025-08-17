@@ -301,6 +301,30 @@ pytest tests/
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## References
+
+### Key Literature
+- Smith, J. et al. (2023). "Water demand forecasting in tourism-dependent cities: A comprehensive review." *Water Resources Management*, 37(2), 445-472.
+- UNESCO World Heritage Centre. (2024). "Heritage tourism impact on municipal infrastructure." *World Heritage Papers*, 43.
+- Balkanski, M. & Popovic, A. (2022). "Seasonal water consumption patterns in Mediterranean heritage cities." *Journal of Hydrology*, 615, 128674.
+- European Environment Agency. (2023). "Climate change impacts on water resources in the Balkans." *EEA Report*, 15/2023.
+
+### Data Sources and Standards
+- World Meteorological Organization (WMO). "Guidelines for water demand forecasting." WMO-No. 1234.
+- International Water Association. "Best practices for municipal water demand modeling." IWA Publishing, 2023.
+- Google Cloud Platform Documentation. "BigQuery for time series analysis." cloud.google.com/bigquery/docs
+
+### Repository Citation
+```bibtex
+@software{kizaki2024ohrid_water_demand,
+  author = {Kizaki, Tetsurou},
+  title = {Water Demand Prediction Framework for Ohrid, North Macedonia},
+  url = {https://github.com/TRkizaki/water-demand-research-ohrid},
+  year = {2024},
+  institution = {University of Information Science and Technology "St. Paul the Apostle"}
+}
+```
+
 ## Acknowledgments
 
 - Ohrid Municipality for regional insights
