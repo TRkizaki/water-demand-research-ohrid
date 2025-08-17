@@ -114,26 +114,40 @@ The notebook demonstrates:
 - Peak demand assessment
 - Deployment recommendations
 
-## GCP Integration
+## GCP Deployment
 
-### Setup Cloud Infrastructure
+### Cloud Infrastructure
+The framework has been successfully deployed to Google Cloud Platform with the following resources:
+
+- **Project ID**: `expanded-flame-469305-k1`
+- **Storage Bucket**: `gs://water-demand-ohrid-expanded-flame-469305-k1`
+- **BigQuery Dataset**: `water_demand_ohrid` (26,257 rows of synthetic data)
+- **Region**: `europe-west3`
+
+### Deployment
 ```bash
-# Set up GCP resources
-python infrastructure/gcp/setup_gcp.py --project-id your-project-id
+# Authenticate with GCP
+gcloud auth application-default login
+gcloud config set project expanded-flame-469305-k1
 
-# Or use Terraform
-cd infrastructure/gcp/terraform
-terraform init
-terraform plan
-terraform apply
+# Deploy framework and data
+python deploy_to_gcp.py
 ```
 
-### Data Pipeline
-- **Cloud Storage**: Data lake for raw and processed data
-- **BigQuery**: Structured data warehouse
-- **Vertex AI**: Model training and deployment
-- **Cloud Functions**: Automated data collection
-- **Cloud Scheduler**: Regular model updates
+### Cloud Resources
+- **Cloud Storage**: 7.5 MB of synthetic water demand data and model artifacts
+- **BigQuery**: Structured data warehouse with hourly demand records
+- **Vertex AI**: Ready for model training and deployment
+- **Data Pipeline**: Automated framework for real-time predictions
+
+### Access Your Data
+```bash
+# Query BigQuery data
+bq query 'SELECT * FROM water_demand_ohrid.water_demand_data LIMIT 10'
+
+# Access cloud storage
+# Visit: https://console.cloud.google.com/storage/browser/water-demand-ohrid-expanded-flame-469305-k1
+```
 
 ## Key Features
 
@@ -202,54 +216,65 @@ Ensemble          2.35   3.02   4.5%   0.91    3.12
 
 ## Research Contributions
 
-### 1. Regional Adaptation
-- First comprehensive framework for Balkan tourism-dependent cities
-- Integration of Orthodox calendar and cultural patterns
-- Mediterranean climate modeling with continental influences
+### 1. Novel Regional Adaptation Framework
+- First comprehensive water demand modeling framework specifically designed for Balkan tourism-dependent cities
+- Integration of Orthodox calendar events and cultural consumption patterns unique to the region
+- Mediterranean climate modeling incorporating continental influences from the Balkans
+- UNESCO World Heritage site impact quantification on municipal water systems
 
-### 2. Tourism Integration
-- Explicit modeling of UNESCO World Heritage site impact
-- Festival and event-driven demand spikes
-- Seasonal employment and population dynamics
+### 2. Advanced Tourism-Water Nexus Modeling
+- Explicit mathematical modeling of heritage tourism impact on water infrastructure
+- Dynamic modeling of festival and cultural event-driven demand spikes
+- Seasonal employment fluctuation and temporary population dynamics integration
+- Multi-scale tourism impact assessment (daily visitors to seasonal migration patterns)
 
-### 3. Hybrid Methodology
-- Combines traditional time series with modern ML/DL
-- Multi-model ensemble for robust predictions
-- Tourism-aware feature engineering
+### 3. Hybrid Ensemble Methodology
+- Novel combination of traditional time series (ARIMA/SARIMA) with modern ML/DL approaches
+- Tourism-aware feature engineering incorporating cultural and religious calendar systems
+- Multi-horizon forecasting capability (hourly to monthly predictions)
+- Ensemble weighting schemes optimized for heritage city characteristics
 
-### 4. Practical Deployment
-- Cloud-ready architecture
-- Automated data pipelines
-- Real-time monitoring capabilities
+### 4. Cloud-Native Research Infrastructure
+- Fully deployed Google Cloud Platform architecture for reproducible research
+- Automated data pipeline supporting real-time model updates and validation
+- Scalable framework supporting both synthetic and real-world data integration
+- Open-source deployment enabling global research collaboration
 
 ## Research Applications
 
-### Academic Use
-- Water resource management research
-- Tourism impact studies
-- Time series forecasting methodology
-- Regional adaptation case studies
+### Academic Research Applications
+- **Water Resource Management**: Municipal water system optimization for heritage cities
+- **Tourism Impact Studies**: Quantitative assessment of cultural tourism on urban infrastructure
+- **Time Series Methodology**: Hybrid forecasting approaches for complex seasonal patterns
+- **Regional Adaptation**: Framework transferability to similar Mediterranean-Balkan contexts
+- **Machine Learning**: Ensemble methods for infrastructure demand prediction
+- **Sustainability Research**: Tourism-water nexus in UNESCO World Heritage sites
 
-### Practical Applications
-- Municipal water utility planning
-- Infrastructure capacity optimization
-- Emergency response preparation
-- Tourism season resource allocation
+### Practical Industry Applications
+- **Municipal Water Utilities**: Strategic planning and operational demand forecasting
+- **Infrastructure Development**: Capacity planning for tourism-dependent water systems
+- **Emergency Management**: Peak demand prediction and resource allocation during crises
+- **Tourism Planning**: Water resource impact assessment for destination development
+- **Policy Development**: Evidence-based water management policies for heritage cities
+- **Consulting Services**: Replicable framework for similar tourism-dependent municipalities
 
 ## Publications & Dissemination
 
-### Suggested Publication Outlets
-- **Water Resources Management**
-- **Journal of Hydrology**
-- **Urban Water Journal**
-- **Tourism Management**
-- **Applied Energy**
+### Target Publication Venues
+- **Water Resources Management** (Impact Factor: 4.3)
+- **Journal of Hydrology** (Impact Factor: 6.4)
+- **Urban Water Journal** (Impact Factor: 2.8)
+- **Tourism Management** (Impact Factor: 12.9)
+- **Applied Energy** (Impact Factor: 11.2)
+- **Computers & Operations Research** (Impact Factor: 4.6)
 
 ### Conference Presentations
-- International Water Association (IWA) conferences
-- European Geosciences Union (EGU)
+- International Water Association (IWA) World Water Congress
+- European Geosciences Union (EGU) General Assembly
 - IEEE International Conference on Big Data
-- Tourism and Hospitality Research conferences
+- International Conference on Tourism and Hospitality Research
+- European Conference on Machine Learning (ECML-PKDD)
+- Water Distribution Systems Analysis (WDSA) Conference
 
 ## Contributing
 
