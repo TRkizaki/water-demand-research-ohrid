@@ -1,0 +1,6 @@
+# Copy this file to terraform.tfvars and fill in your actual values
+# DO NOT commit terraform.tfvars to version control
+
+project_id = "your-gcp-project-id"
+region = "europe-west3"
+bucket_suffix = "your-unique-suffix"

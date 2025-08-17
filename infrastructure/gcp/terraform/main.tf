@@ -1,6 +1,22 @@
 
 # Terraform configuration for Ohrid Water Demand Research
 
+variable "project_id" {
+  description = "GCP Project ID"
+  type        = string
+}
+
+variable "region" {
+  description = "GCP Region"
+  type        = string
+  default     = "europe-west3"
+}
+
+variable "bucket_suffix" {
+  description = "Suffix for bucket name"
+  type        = string
+}
+
 terraform {
   required_providers {
     google = {
@@ -11,14 +27,14 @@ terraform {
 }
 
 provider "google" {
-  project = "expanded-flame-469305-k1"
-  region  = "europe-west3"
+  project = var.project_id
+  region  = var.region
 }
 
 # Cloud Storage bucket
 resource "google_storage_bucket" "data_lake" {
-  name          = "water-demand-ohrid-expanded-flame-469305-k1"
-  location      = "europe-west3"
+  name          = "water-demand-ohrid-${var.bucket_suffix}"
+  location      = var.region
   force_destroy = true
 
   versioning {
@@ -40,7 +56,7 @@ resource "google_bigquery_dataset" "water_demand" {
   dataset_id    = "water_demand_ohrid"
   friendly_name = "Water Demand Ohrid"
   description   = "Water demand prediction data for Ohrid, North Macedonia"
-  location      = "europe-west3"
+  location      = var.region
 
   default_table_expiration_ms = 7776000000  # 90 days
 }
@@ -48,7 +64,7 @@ resource "google_bigquery_dataset" "water_demand" {
 # Vertex AI Workbench instance for ML development
 resource "google_notebooks_instance" "ml_workbench" {
   name         = "ohrid-water-demand-workbench"
-  location     = "europe-west3-a"
+  location     = "${var.region}-a"
   machine_type = "n1-standard-4"
 
   vm_image {
@@ -82,7 +98,7 @@ resource "google_cloud_scheduler_job" "data_collection" {
 
   http_target {
     http_method = "POST"
-    uri         = "https://europe-west3-expanded-flame-469305-k1.cloudfunctions.net/collect-water-data"
+    uri         = "https://${var.region}-${var.project_id}.cloudfunctions.net/collect-water-data"
   }
 }
 
