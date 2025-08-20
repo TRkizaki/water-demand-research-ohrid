@@ -49,7 +49,15 @@ class TemporalFeatureEngineer:
         df_copy['month_cos'] = np.cos(2 * np.pi * df_copy['month'] / 12)
         
         # Day of year cyclical encoding (365-day cycle)
-        day_of_year = df_copy.index.dayofyear
+        # Check if index is datetime, if not use a datetime column if available
+        if hasattr(df_copy.index, 'dayofyear'):
+            day_of_year = df_copy.index.dayofyear
+        elif 'timestamp' in df_copy.columns:
+            day_of_year = pd.to_datetime(df_copy['timestamp']).dt.dayofyear
+        else:
+            # Default to using the day of year based on row position
+            day_of_year = (df_copy.index % 365) + 1
+        
         df_copy['day_of_year_sin'] = np.sin(2 * np.pi * day_of_year / 365)
         df_copy['day_of_year_cos'] = np.cos(2 * np.pi * day_of_year / 365)
         
@@ -118,7 +126,7 @@ class TemporalFeatureEngineer:
         df_copy = df.copy()
         
         # Standard holidays
-        df_copy['is_holiday'] = df_copy.index.date.isin(self.holidays)
+        df_copy['is_holiday'] = pd.Series(df_copy.index.date).isin(self.holidays)
         
         # Holiday proximity features
         df_copy['days_since_holiday'] = self._days_since_holiday(df_copy.index)
