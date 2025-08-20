@@ -46,7 +46,7 @@ class TestSyntheticDataGeneration:
         assert isinstance(data, pd.DataFrame)
         assert len(data) == 25  # 25 hours (including start hour)
         assert 'water_demand_m3_per_hour' in data.columns
-        assert 'timestamp' in data.columns
+        assert data.index.name == 'timestamp'
         
         # Data quality tests
         assert data['water_demand_m3_per_hour'].min() > 0
