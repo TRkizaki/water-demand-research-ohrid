@@ -357,6 +357,9 @@ class OhridWaterDemandGenerator:
         # Add rolling features
         df = self._add_rolling_features(df)
         
+        # Set timestamp as index
+        df.set_index('timestamp', inplace=True)
+        
         return df
     
     def _add_lag_features(self, df: pd.DataFrame) -> pd.DataFrame:
