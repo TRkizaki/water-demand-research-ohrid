@@ -190,7 +190,7 @@ def check_environment():
     print("Checking Environment...")
     
     required_packages = [
-        'pandas', 'numpy', 'scikit-learn', 'xgboost', 'lightgbm',
+        'pandas', 'numpy', 'sklearn', 'xgboost', 'lightgbm',
         'tensorflow', 'statsmodels', 'holidays'
     ]
     
