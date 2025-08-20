@@ -249,12 +249,8 @@ class OhridWaterDemandPredictor:
         # Use validation set if provided
         eval_set = [(X_val, y_val)] if X_val is not None else None
         
-        xgb_model.fit(
-            X_train, y_train,
-            eval_set=eval_set,
-            early_stopping_rounds=20 if eval_set else None,
-            verbose=False
-        )
+        # Fit XGBoost model (without early stopping for compatibility)
+        xgb_model.fit(X_train, y_train, verbose=False)
         models['XGBoost'] = xgb_model
         
         # Store feature importance
