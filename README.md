@@ -21,54 +21,47 @@ This research framework implements and compares multiple approaches for water de
 ## Architecture
 
 ```
-water-demand-research-ohrid/
-├── data/                    # Data management with clear lineage
-│   ├── raw/                 # Original datasets (synthetic + real)
-│   ├── processed/           # Cleaned and integrated data
-│   ├── external/            # Weather, tourism, municipal data
-│   └── features/            # Engineered features for ML
-├── notebooks/               # Complete research workflow
-│   ├── 01_ohrid_water_demand_demo.ipynb
-│   ├── 02_feature_engineering.ipynb
-│   ├── 03_model_experiments.ipynb
-│   ├── 04_evaluation.ipynb
-│   └── 05_comprehensive_time_series_analysis.ipynb
-├── src/                     # Core framework components
-│   ├── data_collectors/     # Synthetic + real data collection
-│   │   ├── ohrid_synthetic_generator.py
-│   │   ├── ohrid_real_data_collector.py
-│   │   └── ohrid_data_manager.py
-│   ├── feature_engineering/ # Comprehensive feature creation
-│   │   └── temporal_features.py
-│   ├── models/              # ML/DL model implementations
-│   │   ├── ohrid_predictor.py
-│   │   └── time_series_analyzer.py
-│   └── utils/               # Helper functions and utilities
-├── tests/                   # Comprehensive testing framework
-│   ├── test_data_collection.py
-│   ├── test_models.py
-│   └── run_all_tests.py
-├── infrastructure/          # Deployment and scaling
-│   ├── docker/              # Multi-stage containerization
-│   │   ├── Dockerfile
-│   │   └── docker-compose.yml
-│   └── gcp/                 # Google Cloud Platform setup
-│       ├── setup_gcp.py
-│       ├── cloud_functions/
-│       └── terraform/
-├── scripts/                 # Automation and setup scripts
+/
+├── .env.example
+├── .gitignore
+├── CITATION.cff
+├── LICENSE
+├── README.md
+├── requirements.txt
+├── config/
+│   └── ohrid_config.yaml
+├── data/
+│   ├── external/
+│   ├── features/
+│   ├── processed/
+│   └── raw/
+├── docs/
+│   ├── REPORT.md
+│   └── WEATHER_API_EVIDENCE_SUBMISSION.md
+├── infrastructure/
+│   ├── docker/
+│   └── gcp/
+├── notebooks/
+├── scripts/
+│   ├── deploy_to_gcp.py
+│   ├── results_summary.py
 │   └── setup_gcp_quick.sh
-├── config/                  # Configuration management
-│   └── ohrid_config.yaml    # Regional parameters
-├── models/                  # Trained model artifacts
-├── logs/                    # Application and training logs
-├── REPORT.md               # Comprehensive research documentation
-├── CITATION.cff            # Citation metadata for research
-├── requirements.txt        # Python dependencies
-├── deploy_to_gcp.py       # Cloud deployment script
-├── results_summary.py     # Performance analysis script
-├── test_*.py              # Additional integration tests
-└── results/               # Model outputs and analysis (generated)
+├── src/
+│   ├── data_collectors/
+│   ├── feature_engineering/
+│   ├── models/
+│   └── utils/
+└── tests/
+    ├── run_all_tests.py
+    ├── test_cloud_deployment.py
+    ├── test_data_collection.py
+    ├── test_framework.py
+    ├── test_ml_models.py
+    ├── test_ml_simple.py
+    ├── test_models.py
+    ├── test_real_data_collection.py
+    ├── weather_api_comprehensive_test.py
+    └── weather_api_test_clean.py
 ```
 
 ## Quick Start
