@@ -200,13 +200,33 @@ python deploy_to_gcp.py --dry-run       # Deployment readiness
 ```
 
 #### 3. Notebook Validation
+
+**⚠️ Important: Notebook Execution Time**
+The main demo notebook (`01_ohrid_water_demand_demo.ipynb`) contains comprehensive data generation, multiple ML model training, and deep learning processes. **Expect 10-15 minutes execution time**.
+
+**Recommended Execution Methods:**
+
 ```bash
-# Execute all research notebooks to verify implementations
-jupyter nbconvert --execute notebooks/01_ohrid_water_demand_demo.ipynb
-jupyter nbconvert --execute notebooks/02_feature_engineering.ipynb
-jupyter nbconvert --execute notebooks/03_model_experiments.ipynb
-jupyter nbconvert --execute notebooks/04_evaluation.ipynb
-jupyter nbconvert --execute notebooks/05_comprehensive_time_series_analysis.ipynb
+# Method 1: In-place execution (modifies original with outputs)
+jupyter nbconvert --execute --to notebook --inplace notebooks/01_ohrid_water_demand_demo.ipynb
+
+# Method 2: Create separate executed copy
+jupyter nbconvert --execute --to notebook notebooks/01_ohrid_water_demand_demo.ipynb --output notebooks/01_ohrid_water_demand_demo_executed.ipynb
+
+# Method 3: Run in background (recommended for automation)
+nohup jupyter nbconvert --execute --to notebook --inplace notebooks/01_ohrid_water_demand_demo.ipynb > execution.log 2>&1 &
+
+# Method 4: Interactive execution (recommended for development)
+jupyter lab notebooks/01_ohrid_water_demand_demo.ipynb
+# Execute cells manually to see progress and handle any issues
+```
+
+**Other Research Notebooks (faster execution):**
+```bash
+jupyter nbconvert --execute --to notebook --inplace notebooks/02_feature_engineering.ipynb
+jupyter nbconvert --execute --to notebook --inplace notebooks/03_model_experiments.ipynb
+jupyter nbconvert --execute --to notebook --inplace notebooks/04_evaluation.ipynb
+jupyter nbconvert --execute --to notebook --inplace notebooks/05_comprehensive_time_series_analysis.ipynb
 ```
 
 ### Implementation Status Matrix
