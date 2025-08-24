@@ -237,15 +237,28 @@ jupyter nbconvert --execute --to notebook --inplace notebooks/03_model_experimen
 nohup jupyter nbconvert --execute --to notebook --inplace notebooks/03_model_experiments.ipynb > model_exp_execution.log 2>&1 &
 ```
 
-**Quick Execution (other notebooks):**
+**Quick Execution (~2-3 minutes):**
 ```bash
+# Model evaluation - requires results from 03_model_experiments.ipynb
 jupyter nbconvert --execute --to notebook --inplace notebooks/04_evaluation.ipynb
+
+# Alternative: Safe execution with separate output file
+jupyter nbconvert --execute --to notebook notebooks/04_evaluation.ipynb --output notebooks/04_evaluation_executed.ipynb
+```
+
+**Fast Execution (other notebooks):**
+```bash
 jupyter nbconvert --execute --to notebook --inplace notebooks/05_comprehensive_time_series_analysis.ipynb
 ```
 
-**⚠️ Execution Dependencies:**
-- `03_model_experiments.ipynb` requires `02_feature_engineering.ipynb` to be run first
-- Notebooks should be executed in sequence for best results: 01 → 02 → 03 → 04 → 05
+**⚠️ Execution Dependencies & Sequence:**
+- `02_feature_engineering.ipynb` → creates feature dataset (required by 03 & 04)
+- `03_model_experiments.ipynb` → requires 02, creates results files (required by 04)
+- `04_evaluation.ipynb` → requires results from 03 for comprehensive evaluation
+- **Recommended sequence:** 01 → 02 → 03 → 04 → 05
+
+**🔧 Mock Data Option for Testing:**
+If `03_model_experiments.ipynb` hasn't been executed successfully, mock results are auto-created for `04_evaluation.ipynb` testing.
 
 ### Implementation Status Matrix
 
