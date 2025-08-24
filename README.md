@@ -246,19 +246,33 @@ jupyter nbconvert --execute --to notebook --inplace notebooks/04_evaluation.ipyn
 jupyter nbconvert --execute --to notebook notebooks/04_evaluation.ipynb --output notebooks/04_evaluation_executed.ipynb
 ```
 
-**Fast Execution (other notebooks):**
+**Moderate Execution (~3-5 minutes):**
 ```bash
+# Comprehensive time series analysis - academic focus on traditional methods
 jupyter nbconvert --execute --to notebook --inplace notebooks/05_comprehensive_time_series_analysis.ipynb
+
+# Alternative: Safe execution with separate output file
+jupyter nbconvert --execute --to notebook notebooks/05_comprehensive_time_series_analysis.ipynb --output notebooks/05_comprehensive_time_series_analysis_executed.ipynb
+
+# Background execution for unattended analysis
+nohup jupyter nbconvert --execute --to notebook --inplace notebooks/05_comprehensive_time_series_analysis.ipynb > ts_analysis_execution.log 2>&1 &
 ```
 
 **⚠️ Execution Dependencies & Sequence:**
 - `02_feature_engineering.ipynb` → creates feature dataset (required by 03 & 04)
 - `03_model_experiments.ipynb` → requires 02, creates results files (required by 04)
 - `04_evaluation.ipynb` → requires results from 03 for comprehensive evaluation
-- **Recommended sequence:** 01 → 02 → 03 → 04 → 05
+- `05_comprehensive_time_series_analysis.ipynb` → **independent** (uses existing synthetic data)
+- **Recommended sequence:** 01 → 02 → 03 → 04 | 05 (can run independently)
 
-**🔧 Mock Data Option for Testing:**
-If `03_model_experiments.ipynb` hasn't been executed successfully, mock results are auto-created for `04_evaluation.ipynb` testing.
+**🎓 Academic Focus Notebooks:**
+- `05_comprehensive_time_series_analysis.ipynb` provides **traditional statistical methods** (ARIMA, SARIMA, ETS)
+- Includes stationarity testing, model diagnostics, and publication-ready analysis
+- Designed for **academic presentations** and **research requirements**
+
+**🔧 Mock Data & Testing Options:**
+- `04_evaluation.ipynb`: Mock results auto-created if 03 fails
+- `05_comprehensive_time_series_analysis.ipynb`: Uses existing synthetic data (no dependencies)
 
 ### Implementation Status Matrix
 
