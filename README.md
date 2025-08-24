@@ -221,13 +221,31 @@ jupyter lab notebooks/01_ohrid_water_demand_demo.ipynb
 # Execute cells manually to see progress and handle any issues
 ```
 
-**Other Research Notebooks (faster execution):**
+**Other Research Notebooks:**
+
+**Fast Execution (~30 seconds):**
 ```bash
 jupyter nbconvert --execute --to notebook --inplace notebooks/02_feature_engineering.ipynb
+```
+
+**Moderate Execution (~5-8 minutes):**
+```bash
+# Note: Requires 02_feature_engineering.ipynb to be executed first
 jupyter nbconvert --execute --to notebook --inplace notebooks/03_model_experiments.ipynb
+
+# Alternative: Background execution for automation
+nohup jupyter nbconvert --execute --to notebook --inplace notebooks/03_model_experiments.ipynb > model_exp_execution.log 2>&1 &
+```
+
+**Quick Execution (other notebooks):**
+```bash
 jupyter nbconvert --execute --to notebook --inplace notebooks/04_evaluation.ipynb
 jupyter nbconvert --execute --to notebook --inplace notebooks/05_comprehensive_time_series_analysis.ipynb
 ```
+
+**⚠️ Execution Dependencies:**
+- `03_model_experiments.ipynb` requires `02_feature_engineering.ipynb` to be run first
+- Notebooks should be executed in sequence for best results: 01 → 02 → 03 → 04 → 05
 
 ### Implementation Status Matrix
 
