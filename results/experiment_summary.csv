@@ -1,0 +1,2 @@
+experiment_date,dataset_size,features_count,models_tested,best_model,best_mae,best_r2,data_source
+2025-08-24 23:18:36.298739,26257,87,5,Ensemble,2.35,0.91,synthetic
