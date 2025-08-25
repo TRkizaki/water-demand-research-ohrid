@@ -588,6 +588,108 @@ The framework integrates with Google Cloud Platform providing a scalable researc
 5. **Model Deployment** - Real-time prediction endpoints
 6. **Monitoring** - Performance tracking and alerting
 
+### GCP Cloud Storage Organization
+
+**Project Architecture:**
+```
+gs://water-demand-ohrid-[YOUR-PROJECT-ID]/
+├── data/
+│   ├── raw/                    # Original datasets
+│   │   └── ohrid_synthetic_water_demand.csv (7.5MB)
+│   ├── processed/              # Cleaned data for analysis
+│   ├── features/               # Engineered features
+│   └── external/               # Third-party data sources
+├── models/
+│   └── xgboost/               # Trained model artifacts
+│       └── model_info.json    # Performance metrics (R²=0.98)
+├── framework/
+│   ├── src/
+│   │   ├── data_collectors/   # Data ingestion modules
+│   │   └── models/           # ML prediction models
+│   └── config/               # Configuration files
+├── experiments/              # Research experiment results
+├── tests/                   # Validation and testing
+│   └── cloud_prediction_test.json
+└── logs/                    # System monitoring logs
+```
+
+**BigQuery Infrastructure:**
+- **Project**: [YOUR-PROJECT-ID]
+- **Dataset**: water_demand_ohrid
+- **Tables**: 
+  - `water_demand_data` (26,257 rows, 39 features)
+  - `model_predictions` (Prediction results)
+  - `model_performance` (Evaluation metrics)
+- **Storage**: 7.4MB logical, 3.2MB physical (compressed)
+- **Location**: europe-west3 (Frankfurt) - EU compliant
+
+### Research Workflow in Cloud
+
+**🧪 Scalable Experiments:**
+- **experiments/ directory**: Store research results and comparisons
+- **models/ directory**: Version control for different ML approaches  
+- **framework/ directory**: Reusable code for collaborative research
+- **logs/ directory**: Track all experimental runs
+
+**📊 Research Data Pipeline:**
+1. **Data**: `data/raw/` → `data/processed/` → `data/features/`
+2. **Models**: `framework/src/models/` → `models/xgboost/`
+3. **Results**: `experiments/` → `tests/`
+4. **Monitoring**: `logs/` → Cloud Monitoring dashboard
+
+### Data Retrieval Functions
+
+**📊 Functions to Retrieve `ohrid_synthetic_water_demand.csv` Data**
+
+**1. Generate the CSV (Primary Source)**
+```python
+from src.data_collectors.ohrid_synthetic_generator import OhridWaterDemandGenerator
+
+# Initialize generator
+generator = OhridWaterDemandGenerator()
+
+# Generate 3 years of hourly data
+synthetic_data = generator.generate_synthetic_data(
+    start_date="2021-01-01",
+    end_date="2023-12-31",
+    frequency="1h"
+)
+
+# Save to CSV file
+generator.save_data(synthetic_data, "data/raw/ohrid_synthetic_water_demand.csv")
+```
+
+**2. Load Existing CSV (For Analysis)**
+```python
+# Method 1: Direct pandas load
+import pandas as pd
+df = pd.read_csv('data/raw/ohrid_synthetic_water_demand.csv')
+
+# Method 2: Using Ohrid Predictor class
+from src.models.ohrid_predictor import OhridWaterDemandPredictor
+predictor = OhridWaterDemandPredictor()
+df = predictor.load_data("data/raw/ohrid_synthetic_water_demand.csv")
+```
+
+**3. Retrieve from GCP Cloud Storage**
+```bash
+# Download from cloud
+gsutil cp gs://water-demand-ohrid-[YOUR-PROJECT-ID]/data/raw/ohrid_synthetic_water_demand.csv data/raw/
+
+# Or query directly from BigQuery
+bq query "SELECT * FROM water_demand_ohrid.water_demand_data LIMIT 1000"
+```
+
+**4. Quick Command-Line Generation**
+```bash
+# Run the generator directly
+python src/data_collectors/ohrid_synthetic_generator.py
+
+# This will create the 7.5MB CSV file with 26,257 rows
+```
+
+**🎯 Main Function**: `OhridWaterDemandGenerator.generate_synthetic_data()` - creates the complete 26,257-hour dataset with all 39 features for Ohrid water demand research.
+
 ### GCP Setup Instructions
 
 #### 1. Prerequisites
